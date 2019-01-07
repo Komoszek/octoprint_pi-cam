@@ -1,11 +1,17 @@
 $(function() {
     function PiCamViewModel(parameters) {
+
         var self = this;
+
+        self.loginState = parameters[0];
+
 
         // This will get called before the HelloWorldViewModel gets bound to the DOM, but after its depedencies have
         // already been initialized. It is especially guaranteed that this method gets called _after_ the settings
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
-        self.onBeforeBinding = function() {
+        self.onAfterBinding = function() {
+
+          console.log(loginState)
           var canvas = document.getElementById("pi-cam");
 
           var wsavc = new WSAvcPlayer(canvas, "webgl");
