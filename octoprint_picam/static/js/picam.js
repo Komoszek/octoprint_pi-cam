@@ -8,6 +8,19 @@ $(function() {
         self.clickState = 0;
         self.clickStateTimeout = '';
 
+
+        self.fullscreen = function() {
+          console.log("dupa");
+            if(self.clickState === 0){
+              self.clickStateTimeout = setTimeout(function(){clickState = 0;},500);
+              self.clickState = 0;
+            } else {
+              clearTimeout(self.clickStateTimeout);
+              alert("Dupa");
+              self.clickState = 0;
+            }
+        };
+
         // This will get called before the HelloWorldViewModel gets bound to the DOM, but after its depedencies have
         // already been initialized. It is especially guaranteed that this method gets called _after_ the settings
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
@@ -20,16 +33,7 @@ $(function() {
           wsavc.connect(protocol + '//' + document.location.hostname  + ':8080/video-stream');
         }
 
-        self.fullscreen = function() {
-            if(self.clickState === 0){
-              self.clickStateTimeout = setTimeout(function(){clickState = 0;},500);
-              self.clickState = 0;
-            } else {
-              clearTimeout(self.clickStateTimeout);
-              alert("Dupa");
-              self.clickState = 0;
-            }
-        };
+
 
     }
 
