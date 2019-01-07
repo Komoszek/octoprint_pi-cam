@@ -6,14 +6,12 @@ $(function() {
         // already been initialized. It is especially guaranteed that this method gets called _after_ the settings
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
         self.onBeforeBinding = function() {
-          console.log(self);
-          /*
           var canvas = document.getElementById("pi-cam");
 
           var wsavc = new WSAvcPlayer(canvas, "webgl");
 
           var protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
-          wsavc.connect(protocol + '//' + window.location.host + '/video-stream');*/
+          wsavc.connect(protocol + '//' + window.location.host + '/video-stream');
         }
 
 
