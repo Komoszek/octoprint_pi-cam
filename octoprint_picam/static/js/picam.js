@@ -26,6 +26,8 @@ $(function() {
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
         self.onAfterBinding = function() {
           var canvas = document.getElementById("pi-cam");
+          canvas.addEventListener('click', self.fullscreen, false);
+
 
           var wsavc = new WSAvcPlayer(canvas, "webgl");
 
