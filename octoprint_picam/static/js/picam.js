@@ -11,7 +11,7 @@ $(function() {
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
         self.onAfterBinding = function() {
 
-          console.log(loginState)
+          console.log(self.loginState)
           var canvas = document.getElementById("pi-cam");
 
           var wsavc = new WSAvcPlayer(canvas, "webgl");
