@@ -11,7 +11,7 @@ $(function() {
           var wsavc = new WSAvcPlayer(canvas, "webgl");
 
           var protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
-          wsavc.connect(protocol + '//' + window.location.host + '/video-stream');
+          wsavc.connect(protocol + '//' + document.location.hostname  + ':8080/video-stream');
         }
 
 
