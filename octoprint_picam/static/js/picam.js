@@ -5,13 +5,13 @@ $(function() {
 
         self.loginState = parameters[0];
 
+        self.clickState = 0;
+        self.clickStateTimeout = '';
 
         // This will get called before the HelloWorldViewModel gets bound to the DOM, but after its depedencies have
         // already been initialized. It is especially guaranteed that this method gets called _after_ the settings
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
         self.onAfterBinding = function() {
-
-          console.log(self.loginState)
           var canvas = document.getElementById("pi-cam");
 
           var wsavc = new WSAvcPlayer(canvas, "webgl");
@@ -20,6 +20,16 @@ $(function() {
           wsavc.connect(protocol + '//' + document.location.hostname  + ':8080/video-stream');
         }
 
+        self.fullscreen = function() {
+            if(self.clickState === 0){
+              self.clickStateTimeout = setTimeout(function(){clickState = 0;},500);
+              self.clickState = 0;
+            } else {
+              clearTimeout(self.clickStateTimeout);
+              alert("Dupa");
+              self.clickState = 0;
+            }
+        };
 
     }
 

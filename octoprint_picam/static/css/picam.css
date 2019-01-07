@@ -2,19 +2,26 @@
  position:fixed;
  bottom:0;
  right:0;
+ width:480px;
+ height:270px;
 }
 
 #pi-cam-button{
-  width:20px;
-  height:20px;
+  width:30px;
+  height:30px;
   position: absolute;
-  top: -10px;
-  left: -10px;
+  top: -15px;
+  left: -15px;
   border-radius: 100px;
-  border: 4px solid #2f3236;
-  background-color: #36393f;
+  border: 5px solid #2f3236;
+  background-color: #14171d;
 }
 
 .hidden-feed{
   display:none;
+}
+
+#pi-cam{
+  width:100%;
+  height:100%;
 }
