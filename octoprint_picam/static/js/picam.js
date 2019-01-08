@@ -4,19 +4,22 @@ $(function() {
         var self = this;
 
         self.loginState = parameters[0];
-
+        var canvas = null;
         self.clickState = 0;
         self.clickStateTimeout = '';
 
 
         self.fullscreen = function() {
-          console.log("dupa");
             if(self.clickState === 0){
-              self.clickStateTimeout = setTimeout(function(){clickState = 0;},500);
-              self.clickState = 0;
+              self.clickStateTimeout = setTimeout(function(){self.clickState = 0;},500);
+              self.clickState = 1;
             } else {
               clearTimeout(self.clickStateTimeout);
-              alert("Dupa");
+              if(canvas.parentNode.classList.contains('fullscreen')){
+                canvas.parentNode.classList.remove('fullscreen');
+              } else {
+                canvas.parentNode.classList.add('fullscreen');
+              }
               self.clickState = 0;
             }
         };
@@ -24,11 +27,23 @@ $(function() {
         // This will get called before the HelloWorldViewModel gets bound to the DOM, but after its depedencies have
         // already been initialized. It is especially guaranteed that this method gets called _after_ the settings
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
-        self.onAfterBinding = function() {
-          var canvas = document.getElementById("pi-cam");
+        self.onBeforeBinding = function() {
+          canvas = document.getElementById("pi-cam");
           canvas.addEventListener('click', self.fullscreen, false);
+          canvas.parentNode.classList.remove('hidden-feed');
 
-
+          window.on('resize', function(){
+            if(canvas.parentNode.classList.contains('fullscreen')){
+              if(window.innerWidth*9 > 16*window.innerheight){
+                canvas.style.height = 100%;
+                canvas.style.width = null;
+              } else {
+                canvas.style.height = null;
+                canvas.style.width = 100%;
+              }
+            }
+          });
+          
           var wsavc = new WSAvcPlayer(canvas, "webgl");
 
           var protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
