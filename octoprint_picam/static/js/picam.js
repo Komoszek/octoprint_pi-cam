@@ -32,18 +32,18 @@ $(function() {
           canvas.addEventListener('click', self.fullscreen, false);
           canvas.parentNode.classList.remove('hidden-feed');
 
-          window.on('resize', function(){
+          canvas.parentNode.onresize = function(){
             if(canvas.parentNode.classList.contains('fullscreen')){
-              if(window.innerWidth*9 > 16*window.innerheight){
-                canvas.style.height = 100%;
-                canvas.style.width = null;
+              if(canvas.parentNode.clientWidth*9 > 16*canvas.parentNode.clientHeight){
+                canvas.setAttribute('height','100%');
+                canvas.setAttribute('width',null);
               } else {
-                canvas.style.height = null;
-                canvas.style.width = 100%;
+                canvas.setAttribute('width','100%');
+                canvas.setAttribute('height',null);
               }
             }
-          });
-          
+          };
+
           var wsavc = new WSAvcPlayer(canvas, "webgl");
 
           var protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
