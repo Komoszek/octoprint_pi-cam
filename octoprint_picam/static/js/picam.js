@@ -24,10 +24,6 @@ $(function() {
             }*/
         };
 
-        self.toggleCamera = function() {
-
-        }
-
         function dragElement(elmnt) {
           var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
@@ -62,7 +58,7 @@ $(function() {
 
             console.log(pos1, pos2, pos3, pos4);
 
-            elmnt.parentNode.style.width = max((elmnt.parentNode.clientWidth + pos3),((elmnt.parentNode.clientHeight + pos4)*(16/9)));
+            elmnt.parentNode.style.width = max((elmnt.parentNode.clientWidth + pos1),((elmnt.parentNode.clientHeight + pos2)*(16/9)));
             elmnt.parentNode.style.height = elmnt.parentNode.style.width* (9/16);
 
           }
