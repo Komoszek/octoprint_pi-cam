@@ -37,6 +37,8 @@ $(function() {
 
 
           function dragMouseDown(e) {
+            moveFlag = false;
+
             e = e || window.event;
             e.preventDefault();
             // get the mouse cursor position at startup:
