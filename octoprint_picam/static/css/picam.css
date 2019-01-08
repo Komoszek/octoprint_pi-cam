@@ -30,6 +30,11 @@
   min-height:100%;
 }
 
+.minimized-feed{
+  height:0px!important;
+  width:0px!important;
+}
+
 .fullscreen > #pi-cam-button {
   display: none;
 }
