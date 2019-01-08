@@ -8,20 +8,12 @@ $(function() {
         self.clickState = 0;
         self.clickStateTimeout = '';
 
-
         self.fullscreen = function() {
-          /*  if(self.clickState === 0){
-              self.clickStateTimeout = setTimeout(function(){self.clickState = 0;},500);
-              self.clickState = 1;
-            } else {
-              clearTimeout(self.clickStateTimeout);*/
               if(canvas.parentNode.classList.contains('fullscreen')){
                 canvas.parentNode.classList.remove('fullscreen');
               } else {
                 canvas.parentNode.classList.add('fullscreen');
               }
-              /*self.clickState = 0;
-            }*/
         };
 
         function dragElement(elmnt) {
@@ -29,8 +21,6 @@ $(function() {
 
           elmnt.onmousedown = dragMouseDown;
           var moveFlag = false;
-
-
 
           function dragMouseDown(e) {
             moveFlag = false;
@@ -64,7 +54,6 @@ $(function() {
           }
 
           function closeDragElement() {
-            // stop moving when mouse button is released:
 
             if(moveFlag === false){
               if(elmnt.parentNode.classList.contains('minimized'))
@@ -83,6 +72,11 @@ $(function() {
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
         self.onBeforeBinding = function() {
           canvas = document.getElementById("pi-cam");
+
+          var ctx = canvas.getContext("2d");
+          ctx.fillStyle = "brack";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
           canvas.addEventListener('dblclick', self.fullscreen, false);
           //document.getElementById('pi-cam-button').addEventListener('click', self.toggleCamera, false);
 
@@ -107,11 +101,6 @@ $(function() {
           var protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
           wsavc.connect(protocol + '//' + document.location.hostname  + ':8080/video-stream');
         }
-
-
-
-
-
     }
 
     // This is how our plugin registers itself with the application, by adding some configuration information to

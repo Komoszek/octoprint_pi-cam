@@ -17,6 +17,15 @@
   background-color: #474A40;
 }
 
+#pi-cam-button::after{
+  content: "\21F1";
+}
+
+.fullscreen > #pi-cam-button::after {
+  content: "\21F2";
+
+}
+
 .hidden-feed{
   display:none;
 }
