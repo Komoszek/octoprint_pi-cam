@@ -4,25 +4,29 @@
  right:0;
  width:480px;
  height:270px;
+ background-color:#000000;
 }
 
 #pi-cam-button{
   width:30px;
   height:30px;
   position: absolute;
-  top: -15px;
-  left: -15px;
+  top: -20px;
+  left: -20px;
   border-radius: 100px;
-  border: 5px solid #2f3236;
-  background-color: #474A40;
+  border: 5px solid #2f3136;
+  background-color: #595e68;
+  text-align:center;
+  line-height: 30px;
+  font-size:30px;
 }
 
 #pi-cam-button::after{
-  content: "\21F1";
+  content: "\D7";
 }
 
-.fullscreen > #pi-cam-button::after {
-  content: "\21F2";
+.minimized-feed > #pi-cam-button::after {
+  content: "\21B8";
 
 }
 
@@ -38,10 +42,17 @@
   min-width:100%;
   min-height:100%;
 }
+.minimized-feed > #pi-cam-button {
+  border-radius: 0px;
+  top: -40px;
+  left: -40px;
+
+}
 
 .minimized-feed{
   height:0px!important;
   width:0px!important;
+   transition-duration: 0.2137s;
 }
 
 .fullscreen > #pi-cam-button {

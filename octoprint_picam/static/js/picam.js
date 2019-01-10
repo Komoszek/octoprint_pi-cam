@@ -2,23 +2,31 @@ $(function() {
     function PiCamViewModel(parameters) {
 
         var self = this;
-
         self.loginState = parameters[0];
         var canvas = null;
+        var canvasContainer = null;
         self.clickState = 0;
         self.clickStateTimeout = '';
 
         self.fullscreen = function() {
-              if(canvas.parentNode.classList.contains('fullscreen')){
-                canvas.parentNode.classList.remove('fullscreen');
+              if(canvasContainer.classList.contains('fullscreen')){
+                canvasContainer.classList.remove('fullscreen');
               } else {
-                canvas.parentNode.classList.add('fullscreen');
+                canvasContainer.classList.add('fullscreen');
+
+                if(canvasContainer.clientWidth*9 > 16*canvasContainer.clientHeight){
+                  canvas.style.height = '100%';
+                  canvas.style.width = 'auto';
+                } else {
+                  canvas.style.height = 'auto';
+                  canvas.style.width = '100%';
+                }
               }
         };
 
-        function dragElement(elmnt) {
-          var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
+
+        function dragElement(elmnt) {
           elmnt.onmousedown = dragMouseDown;
           var moveFlag = false;
 
@@ -27,9 +35,7 @@ $(function() {
 
             e = e || window.event;
             e.preventDefault();
-            // get the mouse cursor position at startup:
-            pos3 = e.clientX;
-            pos4 = e.clientY;
+
             document.onmouseup = closeDragElement;
             // call a function whenever the cursor moves:
             document.onmousemove = elementDrag;
@@ -39,27 +45,24 @@ $(function() {
             moveFlag = true;
             e = e || window.event;
             e.preventDefault();
-            // calculate the new cursor position:
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            // set the element's new position:
-
-            console.log(pos1, pos2, pos3, pos4);
-
-            elmnt.parentNode.style.width = max((elmnt.parentNode.clientWidth + pos1),((elmnt.parentNode.clientHeight + pos2)*(16/9)));
-            elmnt.parentNode.style.height = elmnt.parentNode.style.width* (9/16);
-
+            if(!(canvasContainer.classList.contains('minimized'))){
+              canvasContainer.style.width = Math.min(window.innerWidth,window.innerHeight*(16/9),Math.max((parseInt(window.innerWidth) - parseInt(e.clientX)),(parseInt(window.innerHeight) - parseInt(e.clientY)*(16/9))) + 'px';
+              canvasContainer.style.height = parseInt(canvasContainer.style.width* (9/16)) + 'px';
+            }
           }
 
           function closeDragElement() {
 
             if(moveFlag === false){
-              if(elmnt.parentNode.classList.contains('minimized'))
-                elmnt.parentNode.classList.remove('minimized');
+              if(canvasContainer.classList.contains('minimized')){
+                canvasContainer.classList.remove('minimized');
+                this.wsavc.connect(this.url);
+                this.wsavc.autorestart = true;
+              }
               else
-                elmnt.parentNode.classList.add('minimized');
+                canvasContainer.classList.add('minimized');
+                this.wsavc.close();
+                this.wsavc.autorestart = false;
             }
 
             document.onmouseup = null;
@@ -72,35 +75,75 @@ $(function() {
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
         self.onBeforeBinding = function() {
           canvas = document.getElementById("pi-cam");
+          canvasContainer = canvas.parentNode.parentNode;
 
-          var ctx = canvas.getContext("2d");
-          ctx.fillStyle = "brack";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          canvas.addEventListener('dblclick', self.fullscreen, false);
+          canvasContainer.addEventListener('dblclick', self.fullscreen, false);
           //document.getElementById('pi-cam-button').addEventListener('click', self.toggleCamera, false);
 
           dragElement(document.getElementById('pi-cam-button'));
 
-          canvas.parentNode.classList.remove('hidden-feed');
 
           window.addEventListener('resize',function(){
-            if(canvas.parentNode.classList.contains('fullscreen')){
-              if(canvas.parentNode.clientWidth*9 > 16*canvas.parentNode.clientHeight){
+            if(canvasContainer.classList.contains('fullscreen')){
+              if(canvasContainer.clientWidth*9 > 16*canvasContainer.clientHeight){
                 canvas.style.height = '100%';
                 canvas.style.width = 'auto';
               } else {
                 canvas.style.height = 'auto';
                 canvas.style.width = '100%';
               }
+            } else {
+                if(canvasContainer.clientWidth > window.innerWidth){
+                  canvasContainer.style.width = window.innerWidth + 'px';
+                  canvasContainer.style.height = window.innerWidth*(9/16) + 'px';
+                } else if(client.parentNode.clientHeight > window.innerHeight) {
+                  canvasContainer.style.height = window.innerHeight + 'px';
+                  canvasContainer.style.width = window.innerHeight*(16/9) + 'px';
+
+                }
             }
           });
 
-          var wsavc = new WSAvcPlayer(canvas, "webgl");
+          canvasContainer.classList.remove('hidden-feed');
 
-          var protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
-          wsavc.connect(protocol + '//' + document.location.hostname  + ':8080/video-stream');
+              this.wsavc = new WSAvcPlayer(canvas, "webgl");
+              window.wsavc = this.wsavc;
+              this.wsavc.autorestart = true;
+              console.log(this.wsavc.canvas);
+              protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+              this.url = protocol + '//' + document.location.hostname  + ':8080';
+              setTimeout(function(){this.wsavc.connect(this.url)},500);
+
+                    function FirstChangeWatcher(){
+                      if(canvas.style.height !== '56.6667vh')
+                setTimeout(function(){FirstChangeWatcher()},10);
+                else{
+                  canvas.style.width = 960 + 'px';
+                  canvas.style.height = 540 + 'px';
+                  canvas.width = 960;
+                  canvas.height = 540;
+                  canvas.parentNode.style.display = null;
+
+       }
+      }
+FirstChangeWatcher();
+
         }
+
+        wsavc.on('disconnected',()=>{
+          console.log('WS Disconnected');
+          canvas.parentNode.style.display = "none";
+          FirstChangeWatcher();
+        wsavc.connect(this.url);
+      })
+     wsavc.on('connected',()=>console.log('WS connected'))
+
+     wsavc.on('initalized',(payload)=>{
+       console.log('Initialized', payload)
+
+     })
+     wsavc.on('stream_active',active=>console.log('Stream is ',active?'active':'offline'))
+
     }
 
     // This is how our plugin registers itself with the application, by adding some configuration information to
