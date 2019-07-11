@@ -46,7 +46,7 @@ $(function() {
             e = e || window.event;
             e.preventDefault();
             if(!(canvasContainer.classList.contains('minimized'))){
-              canvasContainer.style.width = Math.min(window.innerWidth,window.innerHeight*(16/9),Math.max((parseInt(window.innerWidth) - parseInt(e.clientX)),(parseInt(window.innerHeight) - parseInt(e.clientY)*(16/9))) + 'px';
+              canvasContainer.style.width = Math.min(window.innerWidth,window.innerHeight*(16/9),Math.max((parseInt(window.innerWidth) - parseInt(e.clientX)),(parseInt(window.innerHeight) - parseInt(e.clientY)*(16/9)))) + 'px';
               canvasContainer.style.height = parseInt(canvasContainer.style.width* (9/16)) + 'px';
             }
           }
@@ -75,6 +75,7 @@ $(function() {
         // have been retrieved from the OctoPrint backend and thus the SettingsViewModel been properly populated.
         self.onBeforeBinding = function() {
           canvas = document.getElementById("pi-cam");
+
           canvasContainer = canvas.parentNode.parentNode;
 
           canvasContainer.addEventListener('dblclick', self.fullscreen, false);
@@ -106,7 +107,7 @@ $(function() {
 
           canvasContainer.classList.remove('hidden-feed');
 
-              this.wsavc = new WSAvcPlayer(canvas, "webgl");
+              this.wsavc = new WSAvcPlayer(canvas, "webgl",1,35);
               window.wsavc = this.wsavc;
               this.wsavc.autorestart = true;
               console.log(this.wsavc.canvas);
@@ -127,22 +128,22 @@ $(function() {
        }
       }
 FirstChangeWatcher();
+this.wsavc.on('disconnected',()=>{
+  console.log('WS Disconnected');
+  canvas.parentNode.style.display = "none";
+  FirstChangeWatcher();
+this.wsavc.connect(this.url);
+})
+this.wsavc.on('connected',()=>console.log('WS connected'))
 
+this.wsavc.on('initalized',(payload)=>{
+console.log('Initialized', payload)
+
+})
+this.wsavc.on('stream_active',active=>console.log('Stream is ',active?'active':'offline'))
         }
 
-        wsavc.on('disconnected',()=>{
-          console.log('WS Disconnected');
-          canvas.parentNode.style.display = "none";
-          FirstChangeWatcher();
-        wsavc.connect(this.url);
-      })
-     wsavc.on('connected',()=>console.log('WS connected'))
 
-     wsavc.on('initalized',(payload)=>{
-       console.log('Initialized', payload)
-
-     })
-     wsavc.on('stream_active',active=>console.log('Stream is ',active?'active':'offline'))
 
     }
 
