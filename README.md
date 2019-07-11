@@ -1,3 +1,3 @@
 # octoprint pi-cam
 
-View from raspberry pi camera embeded into OctoPrint
+Embedded stream of Raspberry Pi camera. Requires some additional server (I forgot what it was)
