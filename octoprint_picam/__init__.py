@@ -21,7 +21,7 @@ class PiCamPlugin(octoprint.plugin.StartupPlugin,
 
 	def get_assets(self):
 		return dict(
-			js=["js/WSAvcPlayer.js","js/picam.js"],
+			js=["js/picam.js"],
 			css=["css/picam.css"],
 			less=["less/picam.less"]
 		)
